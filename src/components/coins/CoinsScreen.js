@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Http from 'cryptoTracker/src/libs/http';
 import CoinsItem from './CoinsItem';
+import Colors from 'cryptoTracker/src/res/colors';
 class CoinsScreen extends Component {
   state = {
     coins: [],
@@ -60,7 +61,7 @@ class CoinsScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: Colors.charade,
   },
   titleText: {
     color: 'black',
