@@ -6,15 +6,18 @@ import {
   SectionList,
   StyleSheet,
   FlatList,
+  Pressable,
 } from 'react-native';
 import Colors from 'cryptoTracker/src/res/colors';
 import Http from '../../libs/http';
 import CoinMarketDetail from './CoinMarketDetail';
+import Storage from 'cryptoTracker/src/libs/storage';
 
 class CoinDetailScreen extends Component {
   state = {
     coin: {},
     markets: [],
+    isFavorite: false,
   };
 
   getSymbolIcon = (name) => {
@@ -29,6 +32,25 @@ class CoinDetailScreen extends Component {
     const markets = await Http.instance.get(url);
     this.setState({markets});
   };
+
+  toggleFavorite = () => {
+    if (this.state.isFavorite) {
+      this.removeFavorite();
+    } else {
+      this.addFavorite();
+    }
+  };
+
+  addFavorite = () => {
+    const coin = JSON.stringify(this.state.coin);
+    const key = `favorite-${this.state.coin.id}`;
+    const stored = Storage.instance.store(key, coin);
+    if (stored) {
+      this.setState({isFavorite: true});
+    }
+  };
+
+  removeFavorite = () => {};
 
   getSections = (coin) => {
     const sections = [
@@ -54,15 +76,27 @@ class CoinDetailScreen extends Component {
     this.setState({coin});
   }
   render() {
-    const {coin, markets} = this.state;
+    const {coin, markets, isFavorite} = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.subHeader}>
-          <Image
-            style={styles.iconImg}
-            source={{uri: this.getSymbolIcon(coin.name)}}
-          />
-          <Text style={styles.titleText}>{coin.name} </Text>
+          <View style={styles.row}>
+            <Image
+              style={styles.iconImg}
+              source={{uri: this.getSymbolIcon(coin.name)}}
+            />
+            <Text style={styles.titleText}>{coin.name} </Text>
+          </View>
+          <Pressable
+            onPress={this.toggleFavorite}
+            style={[
+              styles.btnFavorite,
+              isFavorite ? styles.btnFavoriteRemove : styles.btnFavoriteAdd,
+            ]}>
+            <Text style={styles.btnFavoriteText}>
+              {isFavorite ? 'Remove favorite' : 'Add favorite'}
+            </Text>
+          </Pressable>
         </View>
         <SectionList
           style={styles.section}
@@ -97,10 +131,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.charade,
   },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   subHeader: {
     backgroundColor: 'rgba(0,0,0,0.1)',
     padding: 16,
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   iconImg: {
     width: 25,
@@ -141,6 +180,19 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     marginLeft: 16,
     fontWeight: 'bold',
+  },
+  btnFavorite: {
+    padding: 8,
+    borderRadius: 8,
+  },
+  btnFavoriteText: {
+    color: Colors.white,
+  },
+  btnFavoriteAdd: {
+    backgroundColor: Colors.picton,
+  },
+  btnFavoriteRemove: {
+    backgroundColor: Colors.carmine,
   },
 });
 export default CoinDetailScreen;
