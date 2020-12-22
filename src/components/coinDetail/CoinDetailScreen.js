@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   sectionItem: {
-    padding: 8,
+    padding: 9,
   },
   itemText: {
     color: '#fff',
