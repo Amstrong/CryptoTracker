@@ -5,8 +5,6 @@ import CoinsStack from 'cryptoTracker/src/components/coins/CoinsStack';
 import Colors from 'cryptoTracker/src/res/colors';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import FavoritesStack from 'cryptoTracker/src/components/favorites/FavoriteStack';
-// const App: () => React$Node = () => {
-
 const Tabs = createBottomTabNavigator();
 const App = () => {
   return (
